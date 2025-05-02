@@ -1,8 +1,28 @@
 {
   "jupyter.lab.shortcuts": [],
-  "title": "jupyterlab_ai_assistant",
-  "description": "jupyterlab_ai_assistant settings.",
+  "title": "JupyterLab AI Assistant",
+  "description": "Settings for the JupyterLab AI Assistant extension.",
   "type": "object",
-  "properties": {},
+  "properties": {
+    "openaiApiKey": {
+      "title": "OpenAI API Key",
+      "description": "Your OpenAI API key for AI features.",
+      "type": "string",
+      "format": "password"
+    },
+    "openaiModel": {
+      "title": "OpenAI Model",
+      "description": "Default model to use.",
+      "type": "string",
+      "enum": ["gpt-4o", "gpt-4o-mini"],
+      "default": "gpt-4o-mini"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Preferred language for AI response.",
+      "type": "string",
+      "default": "English"
+    }
+  },
   "additionalProperties": false
 }

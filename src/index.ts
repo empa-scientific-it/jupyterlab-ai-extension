@@ -4,28 +4,52 @@ import {
 } from '@jupyterlab/application';
 
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
+import { IMainMenu } from '@jupyterlab/mainmenu';
 
-/**
- * Initialization data for the jupyterlab_ai_assistant extension.
- */
+const PLUGIN_ID = 'jupyterlab_ai_assistant:plugin';
+
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jupyterlab_ai_assistant:plugin',
+  id: PLUGIN_ID,
   description: 'Provide some (optional) AI add-ons to a Jupyter Lab environment',
   autoStart: true,
-  optional: [ISettingRegistry],
-  activate: (app: JupyterFrontEnd, settingRegistry: ISettingRegistry | null) => {
-    console.log('JupyterLab extension jupyterlab_ai_assistant is activated!');
+  requires: [ISettingRegistry, IMainMenu],
+  activate: (app: JupyterFrontEnd, settingRegistry: ISettingRegistry, mainMenu: IMainMenu) => {
+    let apiKey: string | undefined;
+    let model: string | undefined;
+    let language: string | undefined;
 
-    if (settingRegistry) {
-      settingRegistry
-        .load(plugin.id)
-        .then(settings => {
-          console.log('jupyterlab_ai_assistant settings loaded:', settings.composite);
-        })
-        .catch(reason => {
-          console.error('Failed to load settings for jupyterlab_ai_assistant.', reason);
-        });
+    function loadSettings(settings: ISettingRegistry.ISettings): void {
+      apiKey = settings.get('openaiApiKey').composite as string;
+      model = settings.get('openaiModel').composite as string;
+      language = settings.get('language').composite as string;
+      console.log('[AI Assistant] Settings loaded:', { apiKey, model, language });
+      // Here: sync to Python helper if desired
     }
+
+    Promise.all([app.restored, settingRegistry.load(PLUGIN_ID)])
+      .then(([, settings]) => {
+        loadSettings(settings);
+
+        // Listen to changes
+        settings.changed.connect(loadSettings);
+
+        // Add commands
+        app.commands.addCommand('jupyterlab-ai-assistant:clear-api-key', {
+          label: 'Clear OpenAI API Key',
+          execute: () => {
+            settings.set('openaiApiKey', '');
+          }
+        });
+
+        // Add menu item under "Settings" menu
+        mainMenu.settingsMenu.addGroup([
+          { command: 'jupyterlab-ai-assistant:clear-api-key' },
+        ], 100);
+
+      })
+      .catch(reason => {
+        console.error('Failed to load settings:', reason);
+      });
   }
 };
 
