@@ -1,0 +1,14 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.3.8
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: edoardob90@gmail.com
+author_name: Edoardo Baldi
+has_binder: false
+has_settings: true
+kind: frontend
+labextension_name: jupyterlab_ai_assistant
+project_short_description: Provide some (optional) AI add-ons to a Jupyter Lab environment
+python_name: jupyterlab_ai_assistant
+repository: https://github.com/empa-scientific-it/jupyterlab-ai-assistant
+test: true
+

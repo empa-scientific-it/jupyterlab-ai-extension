@@ -1,0 +1,8 @@
+{
+  "jupyter.lab.shortcuts": [],
+  "title": "jupyterlab_ai_assistant",
+  "description": "jupyterlab_ai_assistant settings.",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}
